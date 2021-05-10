@@ -26,36 +26,32 @@ if [ -z "${config_agentname}" ];then
    exit 1
 fi
 
-echo $agent_folder 
-echo $config_serverurl
-echo $config_pat_token
-echo $config_agentname
-
 cd $agent_folder
 wget https://vstsagentpackage.azureedge.net/agent/2.185.1/vsts-agent-linux-arm64-2.185.1.tar.gz
 tar -zxvf vsts-agent-linux-arm64-2.185.1.tar.gz
 
-echo $agent_folder 
-
-echo $config_serverurl
-echo $config_pat_token
-echo $config_agentname
-
 echo "chmod +x $agent_folder -R"
+echo "chmod installdependencies.sh"
+sudo chmod +x $agent_folder/bin/installdependencies.sh
 
-sudo chmod +x $agent_folder -R
+sudo apt upgrade -y
 
-echo "./bin/installdependencies.sh"
-sudo ./bin/installdependencies.sh
+echo "Install dependencies"
+sudo $agent_folder/bin/installdependencies.sh
 
 sudo apt upgrade -y
 
 echo "./config.sh"
 
+sudo chmod +x $agent_folder/config.sh
+
 ./config.sh --unattended --url $config_serverurl --auth pat --token $config_pat_token --pool "TeamBreak-DonutQuizz" --agent "$config_agentname" --acceptTeeEula 
 
-sudo chmod +x $agent_folder -R
+echo "chmod svc.sh"
+sudo chmod +x $agent_folder/svc.sh
 
-sudo ./svc.sh install 
-
+echo "chmod svc.sh install"
+sudo $agent_folder/svc.sh install 
+echo "chmod svc.sh start"
+sudo $agent_folder/svc.sh start
 
