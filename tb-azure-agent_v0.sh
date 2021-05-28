@@ -1,6 +1,6 @@
 #!/bin/bash
 
-agent_folder="/data/dq/ms-agent"
+agent_folder="/data/dq/tb-agent"
 if ! [ -d $agent_folder ];then
    sudo mkdir $agent_folder -p
 fi
